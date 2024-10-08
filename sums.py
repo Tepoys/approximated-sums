@@ -8,11 +8,13 @@ accuracy = 9
 
 
 def comp(expression: str):
-    return compile(expression, "<String>", "eval")
+    global equation
+    equation = compile(expression, "<String>", "eval")
 
 expression = "x"
 
-equation = comp(expression)
+equation = compile(expression, "<String>", "eval")
+comp(expression)
 
 
 def p(x:int):
@@ -50,6 +52,8 @@ def midpoint(tup: tuple[float, float, int]):
     
     sum = 0
     for i in range(tup[2]):
+        
+        #print(str(p(tup[0]+(dx/2)+i*dx)))
         temp = p(tup[0]+(dx/2)+i*dx)
         sum += temp
         
@@ -184,5 +188,3 @@ def menu():
 
 if __name__ == "__main__":
     menu()
-
-    

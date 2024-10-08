@@ -1,25 +1,51 @@
 import math
+import os
+import traceback
 
-accuracy = 6
+clear = lambda: os.system("clear") if os.name == "posix" else os.system("cls")
+
+accuracy = 9
+
+
+def comp(expression: str):
+    return compile(expression, "<String>", "eval")
+
+expression = "x"
+
+equation = comp(expression)
+
 
 def p(x:int):
-    return 9*math.cos((x**2))
+    #I dont have time to make a math parser myself
+    return eval(equation)
 #math.sqrt((x**3)-8)
 #5*math.cos((x**2))
 
 def enterEquation():
+    global expression
+    invalid = True
+    while invalid:
+        expression = input("Enter your equation:")
+        try:
+            comp(expression)
+            invalid = False
+        except SyntaxError as e:
+            print(traceback.format_exc())
+            print("Your equation is invlaid!\nPlease use proper python math notation")
+        
     return
 
 def printEquation():
+    print("Your equation is:" + expression)
     return
 
-def getParam() -> tuple[int, int, int]:
-    a = int(input("Input lower bound:"))
-    b = int(input("Input upper bound:"))
+def getParam() -> tuple[float, float, int]:
+    a = float(input("Input lower bound:"))
+    b = float(input("Input upper bound:"))
     n = int(input("Enter number of subdivisions:"))
     return (a,b,n)
 
-def midpoint(tup: tuple[int, int, int]):
+def midpoint(tup: tuple[float, float, int]):
     dx = (tup[1]-tup[0])/tup[2]
     
     sum = 0
@@ -35,7 +61,7 @@ def midpoint(tup: tuple[int, int, int]):
     
     return
 
-def trapazoid(tup: tuple[int, int, int]):
+def trapazoid(tup: tuple[float, float, int]):
     dx = (tup[1]-tup[0])/tup[2]
 
     sum = 0
@@ -50,7 +76,7 @@ def trapazoid(tup: tuple[int, int, int]):
     print("The trapazoid sum is:\n" + str(rounding(sum)))
     return
 
-def simpsons(tup: tuple[int, int, int]):
+def simpsons(tup: tuple[float, float, int]):
     if(tup[2]%2 == 1):
         print("Can not use simpsons with odd subdivisions!")
         return
@@ -78,7 +104,8 @@ def rounding(num:float):
     return round(num, accuracy)
 
 def changeRounding():
-    rounding = n if (n := input("What would you like rounding to be(current rounding is " + accuracy + ", enter -1 to cancle):")) <= -1 else rounding
+    global rounding
+    rounding = (n) if (n := int(input("What would you like rounding to be(current rounding is " + str(accuracy) + ", enter -1 to cancle):"))) <= -1 else rounding
 
 
 
@@ -86,6 +113,7 @@ def findSumMenu():
     tup = getParam()
     run = True
     while(run):
+        clear()
         num = input("What sum would you like to find:\n1.Midpoint\n2.Trapazoid\n3.Simpson's\n4.Left\n5.Right\n6.Back\n")
         num = int(num)
         match num:
@@ -107,13 +135,31 @@ def findSumMenu():
                 return
             case _:
                 print("Case \"" + num + "\" not recognized")
+                
+        input("Press enter to continue")
     return
 
+def license():
+    clear()
+    #print(os.path.dirname(os.path.realpath(__file__)))
+    try:  
+        log = open(os.path.dirname(os.path.realpath(__file__)) + os.sep + "LICENSE", "r")
+    except FileNotFoundError:
+        print("LICENSE file not found")
+        return
+    
+    print("Printing license to console:")
+    
+    for line in log:
+        print(str(line), end = " ")
+    print()
+    return
 
 def menu():
     run = True
     while(run):
-        num = input("What would you like to do\n1.Enter Equation\n2.Check Equation\n3.Find Sum\n4.Change Rounding\n5.Exit\n")
+        clear()
+        num = input("What would you like to do\n1.Enter Equation\n2.Check Equation\n3.Find Sum\n4.Change Rounding\n5.License\n6.Exit\n")
         num = int(num)
         match num:
             case 1:
@@ -125,9 +171,14 @@ def menu():
             case 4:
                 changeRounding()
             case 5:
+                license()
+            case 6:
                 return
             case _:
                 print("Case \"" + num + "\" not recognized")
+        #wait
+        if(num==2 or num == 5):
+            input("Press enter to continue")
 
 
 

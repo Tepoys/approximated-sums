@@ -17,7 +17,7 @@ equation = compile(expression, "<String>", "eval")
 comp(expression)
 
 
-def p(x:int):
+def p(x:float) -> float:
     #I dont have time to make a math parser myself
     return eval(equation)
 #math.sqrt((x**3)-8)
@@ -65,7 +65,7 @@ def midpoint(tup: tuple[float, float, int]):
     
     return
 
-def trapazoid(tup: tuple[float, float, int]):
+def trapezoid(tup: tuple[float, float, int]):
     dx = (tup[1]-tup[0])/tup[2]
 
     sum = 0
@@ -77,7 +77,7 @@ def trapazoid(tup: tuple[float, float, int]):
 
     sum/=2
     sum*=dx
-    print("The trapazoid sum is:\n" + str(rounding(sum)))
+    print("The trapezoid sum is:\n" + str(rounding(sum)))
     return
 
 def simpsons(tup: tuple[float, float, int]):
@@ -103,6 +103,30 @@ def simpsons(tup: tuple[float, float, int]):
     print("The simpson's sum is:\n" + str(rounding(sum)))
     return
 
+def left(tup: tuple[float,float,int]):
+    dx = (tup[1]-tup[0])/tup[2]
+    sum = 0
+    
+    for i in range(tup[2]):
+        temp = p(tup[0]+ (i*dx))
+        sum += temp
+    sum *= dx
+    
+    print("The left riemann sum is:\n" + str(rounding(sum)))
+    
+def right(tup: tuple[float,float,int]):
+    dx = (tup[1]-tup[0])/tup[2]
+    sum = 0
+    
+    for i in range(1 ,tup[2]+1, 1):
+        temp = p(tup[0]+ (i*dx))
+        sum += temp
+    sum *= dx
+    
+    print("The right riemann sum is:\n" + str(rounding(sum)))
+    
+    
+
 
 def rounding(num:float):
     return round(num, accuracy)
@@ -118,23 +142,25 @@ def findSumMenu():
     run = True
     while(run):
         clear()
-        num = input("What sum would you like to find:\n1.Midpoint\n2.Trapazoid\n3.Simpson's\n4.Left\n5.Right\n6.Back\n")
+        num = input("What sum would you like to find:\n0.All Sums\n1.Midpoint\n2.trapezoid\n3.Simpson's\n4.Left\n5.Right\n6.Back\n")
         num = int(num)
         match num:
             case 0:
                 midpoint(tup)
-                trapazoid(tup)
+                trapezoid(tup)
                 simpsons(tup)
+                left(tup)
+                right(tup)
             case 1:
                 midpoint(tup)
             case 2:
-                trapazoid(tup)
+                trapezoid(tup)
             case 3:
                 simpsons(tup)
-
-
-
-
+            case 4:
+                left(tup)
+            case 5:
+                right(tup)
             case 6:
                 return
             case _:
